@@ -167,7 +167,7 @@ struct CarState {
   stockFcw @31 :Bool;
   espDisabled @32 :Bool;
 
-  univACCenabled @37 :Bool; 	   # PQ Timebomb
+  univACCenabled @37 :Bool; 	   # for univACC module
 
   # cruise state
   cruiseState @10 :CruiseState;
