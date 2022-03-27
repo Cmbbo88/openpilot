@@ -141,6 +141,7 @@ class CarState(CarStateBase):
 
     # Update ACC setpoint. When the setpoint is zero or there's an error, the
     # radar sends a set-speed of ~90.69 m/s / 203mph.
+
     ret.cruiseState.speed = acc_cp.vl["ACC_02"]["ACC_Wunschgeschw"] * CV.KPH_TO_MS
     if ret.cruiseState.speed > 90:
       ret.cruiseState.speed = 0
@@ -256,6 +257,9 @@ class CarState(CarStateBase):
     # Override openpilot enabled if gas interceptor installed
     if self.CP.enableGasInterceptor and self.openpilot_enabled:
       ret.cruiseState.enabled = True
+
+    # Once "ACC button module" is made and working, add its message in here along with logic for controlling cruise speed value.
+    # This will involve edits to code above and below
 
     # Update ACC setpoint. When the setpoint reads as 255, the driver has not
     # yet established an ACC setpoint, so treat it as zero.

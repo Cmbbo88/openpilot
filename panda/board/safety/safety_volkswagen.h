@@ -207,7 +207,7 @@ static int volkswagen_mqb_rx_hook(CAN_FIFOMailBox_TypeDef *to_push) {
 
     // Signal: ESP_05.ESP_Fahrer_bremst
     if (addr == MSG_ESP_05) {
-      brake_pressed = (GET_BYTE(to_push, 3) & 0x4) >> 2;
+      brake_pressed = false;
     }
 
     generic_rx_checks((addr == MSG_HCA_01));
@@ -274,7 +274,7 @@ static int volkswagen_pq_rx_hook(CAN_FIFOMailBox_TypeDef *to_push) {
 
     // Signal: Motor_2.Bremslichtschalter
     if ((addr == MSG_MOTOR_2) && (GET_BUS(to_push) == 0)) {
-      brake_pressed = (GET_BYTE(to_push, 2) & 0x1);
+      brake_pressed = false;
     }
 
     generic_rx_checks(((addr == MSG_HCA_1) && (GET_BUS(to_push) == 0)));
