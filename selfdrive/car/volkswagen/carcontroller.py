@@ -134,7 +134,7 @@ class CarController():
       apply_brake = actuators.brake * 650
       stopping_wish = False
 
-      if enabled:
+      if CS.univACCenabled:
         if (apply_brake < 5):
           apply_brake = 0
         if apply_brake > 0:
@@ -189,7 +189,7 @@ class CarController():
     # --------------------------------------------------------------------------
     if (frame % P.GAS_STEP == 0) and CS.CP.enableGasInterceptor:
       apply_gas = 0
-      if enabled:
+      if CS.univACCenabled:
         apply_gas = clip(actuators.gas, 0., 1.)
 
       can_sends.append(self.create_gas_control(self.packer_pt, CANBUS.pt, apply_gas, frame // 2))
