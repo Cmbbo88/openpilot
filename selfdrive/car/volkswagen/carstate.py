@@ -242,31 +242,64 @@ class CarState(CarStateBase):
     self.ldw_tlc = False
 
     # univACC button module
-    ret.univACCenabled = False
-    self.univACCspeed = 0
-    if pt_cp.vl["Getriebe_1"]['Waehlhebelposition__Getriebe_1_'] in [5, 9, 12, 14, 10, 11]:
-      ret.cruiseState.available = True
-    if pt_cp.vl["univACC"]['buttonState'] in [1]:
-      if not ret.cruiseState.enabled:
-        ret.cruiseState.enabled = True
-      if ret.cruiseState.enabled:
-        ret.cruiseState.enabled = False
-    if pt_cp.vl["univACC"]['buttonState'] in [2]:
-      if not ret.univACCenabled:
-        ret.univACCenabled = True
-      if ret.univACCenabled:
-        ret.univACCenabled = False
-    if pt_cp.vl["univACC"]['buttonState'] in [3]:
-      self.univACCspeed -= 5
-    if pt_cp.vl["univACC"]['buttonState'] in [4]:
-      self.univACCspeed += 5
-    if pt_cp.vl["univACC"]['buttonState'] in [2, 3, 4] and self.univACCspeed == 0:
-      self.univACCspeed = 5 * round(ret.vEgo/5)
-    if ret.gasPressed or ret.brakePressed:
+    if pt_cp.vl["univACC"]['heartBeat']:
       ret.univACCenabled = False
-    if self.univACCspeed < 0:  # Less than 0 kph == no current setpoint
       self.univACCspeed = 0
-    ret.cruiseState.speed = self.univACCspeed * CV.KPH_TO_MS
+        # Only allow OP to enable if car is in D, S, manual, or tiptronic modes
+      if pt_cp.vl["Getriebe_1"]['Waehlhebelposition__Getriebe_1_'] in [5, 9, 12, 14, 10, 11]:
+        ret.cruiseState.available = True
+      else:
+        ret.cruiseState.available = False
+        ret.univACCenabled = False
+        # Toggle LKAS on, Toggle LKAS and ACC off
+      if pt_cp.vl["univACC"]['buttonState'] in [1]:
+        if not ret.cruiseState.enabled:
+          ret.cruiseState.enabled = True
+        else:
+          ret.cruiseState.enabled = False
+          ret.univACCenabled = False
+        # Toggle ACC on/off
+      if pt_cp.vl["univACC"]['buttonState'] in [2]:
+        if not ret.univACCenabled:
+          if self.univACCspeed == 0:
+            self.univACCspeed = 5 * round(ret.vEgo/5)
+          if ret.cruiseState.available:
+            ret.univACCenabled = True
+        else:
+          ret.univACCenabled = False
+        # Decrease set speed by 5
+      if pt_cp.vl["univACC"]['buttonState'] in [3]:
+        self.univACCspeed -= 5
+        if self.univACCspeed < 0:  # Not allow set speed to breach < 0 mph
+          self.univACCspeed = 0
+        # Increase set speed by 5
+      if pt_cp.vl["univACC"]['buttonState'] in [4]:
+        self.univACCspeed += 5
+        # Gas or Brake press = ACC disable
+      if ret.gasPressed or ret.brakePressed:
+        ret.univACCenabled = False
+        # Link univACCspeed to cruiseState.speed
+      ret.cruiseState.speed = self.univACCspeed * CV.KPH_TO_MS
+      # Stock OP function if univACC button module is not present
+    else:
+      ret.cruiseState.available = bool(pt_cp.vl["GRA_Neu"]['GRA_Hauptschalt'])
+      ret.cruiseState.enabled = True if pt_cp.vl["Motor_2"]['GRA_Status'] in [1, 2] else False
+        # Set override flag for openpilot enabled state.
+      if self.CP.enableGasInterceptor and pt_cp.vl["Motor_2"]['GRA_Status'] in [1, 2]:
+        self.openpilot_enabled = True
+        ret.cruiseState.enabled = True
+        # Check if Gas or Brake pressed and cancel override / OP
+      if self.CP.enableGasInterceptor and (ret.gasPressed or ret.brakePressed):
+        self.openpilot_enabled = False
+        ret.cruiseState.enabled = False
+        # Override openpilot enabled if gas interceptor installed
+      if self.CP.enableGasInterceptor and self.openpilot_enabled:
+        ret.cruiseState.enabled = True
+        # Update ACC setpoint. When the setpoint reads as 255, the driver has not
+        # yet established an ACC setpoint, so treat it as zero.
+      ret.cruiseState.speed = pt_cp.vl["Motor_2"]['Soll_Geschwindigkeit_bei_GRA_Be'] * CV.KPH_TO_MS
+      if ret.cruiseState.speed > 70:  # 255 kph in m/s == no current setpoint
+        ret.cruiseState.speed = 0
 
     # Update control button states for turn signals and ACC controls.
     self.buttonStates["accelCruise"] = bool(pt_cp.vl["GRA_Neu"]['GRA_Up_kurz']) or bool(pt_cp.vl["GRA_Neu"]['GRA_Up_lang'])
