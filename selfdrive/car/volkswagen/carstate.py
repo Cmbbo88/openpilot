@@ -243,8 +243,9 @@ class CarState(CarStateBase):
 
     # univACC button module
     ret.univACCenabled = False
-    ret.cruiseState.available = True #This is set to static True. Might change later
     self.univACCspeed = 0
+    if pt_cp.vl["Getriebe_1"]['Waehlhebelposition__Getriebe_1_'] in [5, 9, 12, 14, 10, 11]:
+      ret.cruiseState.available = True
     if pt_cp.vl["univACC"]['buttonState'] in [1]:
       if not ret.cruiseState.enabled:
         ret.cruiseState.enabled = True
