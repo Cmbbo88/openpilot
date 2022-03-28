@@ -250,6 +250,7 @@ class CarState(CarStateBase):
         ret.cruiseState.available = True
       else:
         ret.cruiseState.available = False
+        ret.cruiseState.enabled = False
         ret.univACCenabled = False
         # Toggle LKAS on, Toggle LKAS and ACC off
       if pt_cp.vl["univACC"]['buttonState'] in [1]:
