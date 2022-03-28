@@ -1288,7 +1288,7 @@ BO_ 428 Bremse_8: 8 XXX
 
 BO_ 528 univACC: 8 XXX
  SG_ heartBeat : 0|1@1+ (1,0) [0|1] "" XXX
- SG_ buttonState : 1|5@1+ (1,0) [0|4] "" XXX
+ SG_ buttonState : 1|3@1+ (1,0) [0|0] "" XXX
 
 BO_ 174 mBremse_9: 8 XXX
  SG_ BR9_Checksumme : 0|8@1+ (1,0) [0|255] "" XXX
@@ -1526,3 +1526,4 @@ CM_ SG_ 1470 XX_DLCORTLC2 "Might be DLC or TLC, might have wrong size";
 CM_ SG_ 1550 MFA_v_Signal_02 "0=km/h, 1=mph";
 
 VAL_ 1088 Waehlhebelposition__Getriebe_1_ 8 "P" 7 "R" 6 "N" 5 "D" 9 "U" 12 "S" 14 "T" 10 "T" 11 "T";
+VAL_ 528 buttonState 0 "No buttonState" 1 "Lat Toggle" 2 "Long Toggle" 3 "Minus 5" 4 "Plus 5";
