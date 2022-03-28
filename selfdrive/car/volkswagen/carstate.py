@@ -259,6 +259,8 @@ class CarState(CarStateBase):
       self.univACCspeed -= 5
     if pt_cp.vl["univACC"]['buttonState'] in [4]:
       self.univACCspeed += 5
+    if pt_cp.vl["univACC"]['buttonState'] in [2, 3, 4] and self.univACCspeed == 0:
+      self.univACCspeed = 5 * round(ret.vEgo/5)
     if ret.gasPressed or ret.brakePressed:
       ret.univACCenabled = False
     if self.univACCspeed < 0:  # Less than 0 kph == no current setpoint
