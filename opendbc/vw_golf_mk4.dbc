@@ -1286,7 +1286,7 @@ BO_ 428 Bremse_8: 8 XXX
  SG_ BR8_Verz_EPB : 62|1@1+ (1,0) [0|1] "" XXX
  SG_ BR8_Check_EPB : 63|1@1+ (1,0) [0|1] "" XXX
 
-BO_ 528 univACC: 8 XXX
+BO_ 528 univACC: 4 XXX
  SG_ heartBeat : 0|1@1+ (1,0) [0|1] "" XXX
  SG_ buttonState : 1|3@1+ (1,0) [0|0] "" XXX
 
