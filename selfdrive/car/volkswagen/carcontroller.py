@@ -160,7 +160,7 @@ class CarController():
       idx = (frame / P.MOB_STEP) % 16
       self.mobPreEnable = mobPreEnable
       self.mobEnabled = mobEnabled
-      can_sends.append(self.create_braking_control(self.packer_pt, CANBUS.pt, apply_brake, idx, mobEnabled, mobPreEnable, stopping_wish))
+      can_sends.append(self.create_braking_control(self.packer_pt, CANBUS.br, apply_brake, idx, mobEnabled, mobPreEnable, stopping_wish))
 
       # --------------------------------------------------------------------------
       #                                                                         #
@@ -179,7 +179,7 @@ class CarController():
         idx = (frame / P.MOB_STEP) % 16
 
         can_sends.append(
-          self.create_awv_control(self.packer_pt, CANBUS.pt, idx, orange_led, green_led, braking_working))
+          self.create_awv_control(self.packer_pt, CANBUS.br, idx, orange_led, green_led, braking_working))
 
     # --------------------------------------------------------------------------
     #                                                                         #
@@ -192,7 +192,7 @@ class CarController():
       if CS.univACCenabled:
         apply_gas = clip(actuators.gas, 0., 1.)
 
-      can_sends.append(self.create_gas_control(self.packer_pt, CANBUS.pt, apply_gas, frame // 2))
+      can_sends.append(self.create_gas_control(self.packer_pt, CANBUS.cam, apply_gas, frame // 2))
 
     # --------------------------------------------------------------------------
     #                                                                         #

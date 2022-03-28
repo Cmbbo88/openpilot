@@ -242,7 +242,7 @@ class CarState(CarStateBase):
     self.ldw_tlc = False
 
     # univACC button module
-    if pt_cp.vl["univACC"]['heartBeat']:
+    if bool(pt_cp.vl["univACC"]['heartBeat']):
       ret.univACCenabled = False
       self.univACCspeed = 0
         # Only allow OP to enable if car is in D, S, manual, or tiptronic modes
