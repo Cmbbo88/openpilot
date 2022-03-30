@@ -244,6 +244,7 @@ class CarState(CarStateBase):
     # univACC button module
     if bool(pt_cp.vl["univACC"]['heartBeat']):
       ret.univACCenabled = False
+      self.univACCtempdisable = False
       self.univACCspeed = 0
         # Only allow OP to enable if car is in D, S, manual, or tiptronic modes
       if pt_cp.vl["Getriebe_1"]['Waehlhebelposition__Getriebe_1_'] in [5, 9, 12, 14, 10, 11]:
@@ -276,9 +277,14 @@ class CarState(CarStateBase):
         # Increase set speed by 5
       if pt_cp.vl["univACC"]['buttonState'] in [4]:
         self.univACCspeed += 5
-        # Gas or Brake press = ACC disable
+        # Gas or Brake press = ACC disable, re-enable after brake release if under 15mph
       if ret.gasPressed or ret.brakePressed:
+        if ret.vEgo < 15 * CV.MS_TO_MPH:
+          self.univACCtempdisable = True
         ret.univACCenabled = False
+      if self.univACCtempdisable and not (ret.gasPressed or ret.brakePressed):
+        ret.univACCenabled = True
+        self.univACCtempdisable = False
         # Link univACCspeed to cruiseState.speed
       ret.cruiseState.speed = self.univACCspeed * CV.KPH_TO_MS
       # Stock OP function if univACC button module is not present
