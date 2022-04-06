@@ -261,10 +261,6 @@ class CarState(CarStateBase):
       self.univACCtempdisable = True if ((ret.gasPressed or ret.brakePressed) and ret.vEgo < 15 * CV.MS_TO_MPH) else False if (ret.univACCenabled) else self.univACCtempdisable
       if self.univACCspeed < 0:  # Not allow set speed to breach 0 mph
         self.univACCspeed = 0
-      if ret.gasPressed or ret.brakePressed:
-        if ret.vEgo < 15 * CV.MS_TO_MPH:
-          self.univACCtempdisable = True
-        ret.univACCenabled = False
       ret.cruiseState.speed = self.univACCspeed * CV.KPH_TO_MS  # Link univACCspeed to cruiseState.speed
       # Stock OP function if univACC button module is not present
     else:
