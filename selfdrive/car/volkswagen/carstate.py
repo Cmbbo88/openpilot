@@ -256,7 +256,7 @@ class CarState(CarStateBase):
         ret.univACCenabled = False
         # univButtonModule control
       ret.cruiseState.enabled = False if (self.univbuttonState == 1 and ret.cruiseState.enabled) else True if (self.univbuttonState == 1 and not ret.cruiseState.enabled) else ret.cruiseState.enabled
-      ret.univACCenabled = False if (ret.cruiseState.enabled == False) else True if ((self.univbuttonState == 2 and not ret.univACCenabled) or (self.univACCtempdisable and not (ret.gasPressed or ret.brakePressed))) else False if ((self.univbuttonState == 2 and ret.univACCenabled) or ((ret.gasPressed or ret.brakePressed) and not self.univACCtempdisable)) else ret.univACCenabled
+      ret.univACCenabled = False if ((ret.cruiseState.enabled == False) or ((self.univbuttonState == 2 and ret.univACCenabled) or ((ret.gasPressed or ret.brakePressed) and not self.univACCtempdisable))) else True if ((self.univbuttonState == 2 and not ret.univACCenabled) or (self.univACCtempdisable and not (ret.gasPressed or ret.brakePressed))) else ret.univACCenabled
       self.univACCspeed = 5 * round(ret.vEgo/5) if (self.univACCspeed == 0 and ret.univACCenabled) else + 5 if (self.univbuttonState == 4) else - 5 if (self.univbuttonState == 3) else self.univACCspeed
       self.univACCtempdisable = True if ((ret.gasPressed or ret.brakePressed) and ret.vEgo < 15 * CV.MS_TO_MPH) else False if (ret.univACCenabled) else self.univACCtempdisable
       if self.univACCspeed < 0:  # Not allow set speed to breach 0 mph
