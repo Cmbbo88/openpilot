@@ -30,7 +30,7 @@ class Api():
     return jwt.encode(payload, self.private_key, algorithm='RS256').decode('utf8')
 
 def api_get(endpoint, method='GET', timeout=None, access_token=None, **params):
-  backend = "https://api.retropilot.org/"
+  backend = "https://api.commadotai.com/"
 
   headers = {}
   if access_token is not None:
