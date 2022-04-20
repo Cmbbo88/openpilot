@@ -251,7 +251,7 @@ class CarState(CarStateBase):
 
     # Check if Gas or Brake pressed and cancel override
     if self.CP.enableGasInterceptor and (ret.gasPressed or ret.brakePressed):
-      self.openpilot_enabled = False
+      self.openpilot_enabled = True
 
     # Override openpilot enabled if gas interceptor installed
     if self.CP.enableGasInterceptor and self.openpilot_enabled:
