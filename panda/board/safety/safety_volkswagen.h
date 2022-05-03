@@ -255,7 +255,7 @@ static int volkswagen_pq_rx_hook(CAN_FIFOMailBox_TypeDef *to_push) {
       int gas_interceptor = VOLKSWAGEN_GET_INTERCEPTOR(to_push);
       if ((gas_interceptor > VOLKSWAGEN_GAS_INTERCEPTOR_THRSLD) &&
           (gas_interceptor_prev <= VOLKSWAGEN_GAS_INTERCEPTOR_THRSLD)) {
-        controls_allowed = 0;
+        controls_allowed = 1;
       }
       gas_interceptor_prev = gas_interceptor;
     }
